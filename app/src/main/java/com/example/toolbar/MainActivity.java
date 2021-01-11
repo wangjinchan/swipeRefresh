@@ -1,21 +1,57 @@
 package com.example.toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
-
+    private DrawerLayout mDrawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mDrawerLayout=findViewById(R.id.drawerLayout);
+        NavigationView navigationView=findViewById(R.id.navView);
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+        }
+       // navigationView.setCheckedItem(R.id.navCall);//默认选中
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.navCall:
+                        Toast.makeText(MainActivity.this,"电话",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.navFriends:
+                        Toast.makeText(MainActivity.this,"朋友",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.navLocation:
+                        Toast.makeText(MainActivity.this,"地址",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_email:
+                        Toast.makeText(MainActivity.this,"邮箱",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.navTask:
+                        Toast.makeText(MainActivity.this,"任务",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -40,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.back:
                 Toast.makeText(this,"返回",Toast.LENGTH_SHORT).show();
+                break;
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
         }
         return true;
