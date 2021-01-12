@@ -9,9 +9,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
+/**
+ * 悬浮按钮和交互提示
+ */
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     @Override
@@ -22,6 +28,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mDrawerLayout=findViewById(R.id.drawerLayout);
         NavigationView navigationView=findViewById(R.id.navView);
+        FloatingActionButton fab=findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v,"删除",Snackbar.LENGTH_SHORT)
+                        .setAction("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(MainActivity.this,"已取消",Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
+            }
+        });
         ActionBar actionBar=getSupportActionBar();
         if (actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -52,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
     }
 
     @Override
