@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,12 +16,24 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 悬浮按钮和交互提示
  */
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
+    private  Fruit[]fruits={new Fruit("苹果",R.drawable.nav_icon),
+                            new Fruit("香蕉",R.drawable.t2),
+                            new Fruit("西瓜",R.drawable.t5),
+                            new Fruit("小丸子",R.drawable.touxiang),
+                            new Fruit("小花",R.drawable.t8),
+                            new Fruit("笨笨",R.drawable.t3),
+    };
+    private List<Fruit>fruitList=new ArrayList<>();
+    private FruitAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        iniFruits();
+        RecyclerView recyclerView=findViewById(R.id.recyclerView);
+        GridLayoutManager layoutManager=new GridLayoutManager(this,2);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter=new FruitAdapter(fruitList);
+        recyclerView.setAdapter(adapter);
 
     }
 
@@ -102,5 +122,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+    private  void iniFruits(){
+        fruitList.clear();
+        for (int i=0;i<50;i++){
+            Random random=new Random();
+            int index=random.nextInt(fruits.length);
+            fruitList.add(fruits[index]);
+        }
     }
 }
