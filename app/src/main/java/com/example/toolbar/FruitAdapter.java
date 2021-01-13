@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,9 +29,16 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Fruit fruit=mFruitList.get(position);
         holder.fruitName.setText(fruit.getName());
+
+        holder.fruitImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,holder.fruitName.getText().toString(),Toast.LENGTH_SHORT).show();
+            }
+        });
         Glide.with(mContext).load(fruit.getImageId()).into(holder.fruitImage);
     }
 

@@ -8,6 +8,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     };
     private List<Fruit>fruitList=new ArrayList<>();
     private FruitAdapter adapter;
+    private SwipeRefreshLayout swipeRefresh;
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,16 +96,42 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter=new FruitAdapter(fruitList);
         recyclerView.setAdapter(adapter);
-
+        //下拉刷新
+        swipeRefresh=findViewById(R.id.swipeRefresh);
+        swipeRefresh.setColorSchemeColors(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshFruits();
+            }
+        });
     }
 
+    private void refreshFruits(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(1000);//休眠1秒
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() { //切回主线程
+                    @Override
+                    public void run() {
+                        iniFruits();
+                        adapter.notifyDataSetChanged();//通知数据发生了变化
+                        swipeRefresh.setRefreshing(false);//刷新结束
+                    }
+                });
+            }
+        }).start();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar,menu);
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
